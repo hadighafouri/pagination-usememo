@@ -6,21 +6,22 @@ import Pagination from "./component/Pagination";
 export default function App() {
   const [data, setData] = useState([]);
   const pageSize = 4;
-  const [pageNum, setPageNum] = useState(1);
+  const [pageNum, setPageNum] = useState(0);
   useEffect(() => {
     const dataRes = axios.get("https://dummyjson.com/products").then((res) => {
-      // res.data.products.length > 1 ?
       setData(res.data.products);
+      setPageNum(1);
       return res;
     });
   }, []);
 
-  const currentPageData = useMemo(() => {
-    console.log("useMemo run");
+  const getPageData = () => {
     const firstRecInx = (pageNum - 1) * pageSize;
     const lastRecInx = firstRecInx + pageSize;
     return data.slice(firstRecInx, lastRecInx);
-  }, [data, pageNum]);
+  };
+
+  const currentPageData = getPageData();
 
   return (
     <div className="App">
@@ -34,9 +35,9 @@ export default function App() {
             </tr>
           </thead>
           <tbody>
-            {currentPageData.map((el) => {
+            {currentPageData.map((el, index) => {
               return (
-                <tr>
+                <tr key={index}>
                   <th>{el.title}</th>
                   <th>{el.description}</th>
                 </tr>

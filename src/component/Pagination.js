@@ -1,8 +1,7 @@
 const Pagination = ({ totalRecNum, pageSize, pageNum, setPageNum }) => {
-  const totalPageCount = totalRecNum / pageSize;
-  let pageList = [];
-  for (let i = 0; i < totalPageCount; i++) {
-    const el = (
+  const totalPageCount = Math.ceil(totalRecNum / pageSize);
+  const pageList = [...Array(totalPageCount)].map((_, i) => {
+    return (
       <li
         key={i + 1}
         className={i + 1 === pageNum ? "active" : null}
@@ -11,9 +10,12 @@ const Pagination = ({ totalRecNum, pageSize, pageNum, setPageNum }) => {
         {i + 1}
       </li>
     );
+  });
 
-    pageList = [...pageList, el];
-  }
+  pageNum < totalPageCount &&
+    pageList.push(<li onClick={() => setPageNum((num) => ++num)}>＞</li>);
+  pageNum > 1 &&
+    pageList.unshift(<li onClick={() => setPageNum((num) => --num)}>＜</li>);
 
   return (
     <div>
